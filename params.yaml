@@ -1,12 +1,19 @@
-testBoolean: True
-testString: "some text"
-testInteger: 42
-testList:
-- "item1"
-- "item2"
-- "item3"
-objectList:
-  - name: "Benny"
-    age: 53
-  - name: "Betty"
-    age: 53
+cdnaref: "Homo_sapiens.GRCh38.cdna.all.fa"
+
+genomeref: "hg38.fa"
+
+annotation: "Homo_sapiens.GRCh38.95.gtf.gz"
+
+fastq:
+- "fastq1"
+- "fastq2"
+
+
+
+maximum_secondary: 100
+
+secondary_score_ratio: 1.0
+
+threads: 50
+
+outputdir: "dir "
