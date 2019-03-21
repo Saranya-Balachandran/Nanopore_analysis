@@ -121,7 +121,7 @@ process vcfAnalysis {
 	
 	"""
 		
-	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file} ${datasetID}_breakpoint.csv ${datasetID}_deletion.csv
+	python {Nanopore_analysis}/Scripts/vcf_analysis.py ${vcf_file} ${datasetID}_breakpoint.csv ${datasetID}_deletion.csv
 
 	"""
 }
