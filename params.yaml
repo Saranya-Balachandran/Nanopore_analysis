@@ -1,0 +1,12 @@
+testBoolean: True
+testString: "some text"
+testInteger: 42
+testList:
+- "item1"
+- "item2"
+- "item3"
+objectList:
+  - name: "Benny"
+    age: 53
+  - name: "Betty"
+    age: 53
