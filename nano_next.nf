@@ -59,7 +59,7 @@ process readCleanup{
  * Step 3. Align the fastq file using minimap2, sort and index the bam files
  */
 process alignmentMap {
- 	publishDir params.outputdir mode: 'copy', overwrite: false
+ 	publishDir params.outputdir, mode: 'copy', overwrite: false
 	
 	input:
 	file ref_seq from genome
@@ -90,7 +90,7 @@ process alignmentMap {
  * Step 6. Call Structural variants
  */
 process variantCalling {
-	publishDir params.outputdir mode: 'copy', overwrite: false
+	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
 	set datasetID, file(alignmentsorted_file) from bam_sort_file
 	set datasetID, file(alignmentsorted_file_bai) from bam_index
@@ -110,7 +110,7 @@ process variantCalling {
  * Step 7. Call Structural variants
  */
 process vcfAnalysis {
-	publishDir params.outputdir mode: 'copy', overwrite: false
+	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
 	set datasetID, file(vcf_file) from vcf
 
@@ -121,7 +121,7 @@ process vcfAnalysis {
 	
 	"""
 		
-	python {Nanopore_analysis}/Scripts/vcf_analysis.py ${vcf_file} ${datasetID}_breakpoint.csv ${datasetID}_deletion.csv
+	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file} ${datasetID}_breakpoint.csv ${datasetID}_deletion.csv
 
 	"""
 }
