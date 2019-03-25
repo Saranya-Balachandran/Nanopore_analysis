@@ -1,0 +1,12 @@
+#nano_next requirements:
+Python 3.6.8
+Python pandas
+Python cyvcf2
+Python collections 
+nextflow version 19.01.0.5050
+NanoFilt 2.2.0
+porechop 0.2.3_seqan2.1.1
+Minimap2 2.15-r905
+Samtools 1.9
+Sniffles 1.0.10
+
