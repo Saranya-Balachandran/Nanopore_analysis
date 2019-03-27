@@ -10,7 +10,11 @@ reads = Channel
 
 genome = Channel.fromPath(params.genomeref)
 
-
+genome.into{
+ref1
+ref2
+ref3
+}
 
 
 
@@ -44,7 +48,7 @@ process readCleanup{
 	set datasetID, file(read_fastq) from nano_filt
   
 	output:
-	set datasetID, file("${datasetID}_pore.fastq") into pore_clean
+	set datasetID, file("${datasetID}_pore.fastq") into pore_clean, pore_clean1
 
 	"""
 	porechop -i ${read_fastq} -o ${datasetID}_pore.fastq
@@ -53,33 +57,83 @@ process readCleanup{
 
 }
 
-
-
 /*
- * Step 3. Align the fastq file using minimap2, sort and index the bam files
+ * Step 3. Preprocess the data
  */
-process alignmentMap {
+
+process genomeindex{
+	input:
+	file ref_seq from ref1
+  
+	output:
+	file 'genome.mmi' into index
+
+	"""
+	minimap2 -t {params.threads} -I 1000G -d genome.mmi ${ref_seq}
+	
+	"""
+
+}
+
+process alignment_ngmlr {
  	publishDir params.outputdir, mode: 'copy', overwrite: false
 	
 	input:
-	file ref_seq from genome
+	file ref_seq_ngmlr from ref2
 	
         set datasetID, file(read_fastq) from pore_clean
 	
 	output:
-	set datasetID, file("${datasetID}_minmap.bam") into bam_file
+	set datasetID, file("${datasetID}_ngmlr.bam") into ngmlr_bam_file
 	
-	set datasetID, file("${datasetID}_sorted.bam") into bam_sort_file
+	set datasetID, file("${datasetID}_ngmlr_sorted.bam") into ngmlr_bam_sort_file
 
-	set datasetID, file("${datasetID}_sorted.bam.bai") into bam_index
+	set datasetID, file("${datasetID}_ngmlr_sorted.bam.bai") into ngmlr_bam_index
 
 	"""
 	
-	minimap2 -t {threads} -ax map-ont -p {params.secondary_score_ratio} -N {params.maximum_secondary} ${ref_seq} ${read_fastq} > ${datasetID}_minmap.bam
-	 
-	samtools sort ${datasetID}_minmap.bam > ${datasetID}_sorted.bam
 	
-	samtools index ${datasetID}_sorted.bam
+	ngmlr -t ${params.threads} -r ${ref_seq_ngmlr} -q ${read_fastq} --skip-write -o ${datasetID}_ngmlr.bam -x ont
+	 
+	samtools sort ${datasetID}_ngmlr.bam > ${datasetID}_ngmlr_sorted.bam
+	
+	samtools index ${datasetID}_ngmlr_sorted.bam
+	
+	"""
+}
+
+/*
+ * Step 4. Align the fastq file using minimap2, sort and index the bam files 
+ */
+process alignment_minimap {
+ 	publishDir params.outputdir, mode: 'copy', overwrite: false
+	
+	input:
+	file ref_seq from index
+	file ref from ref3
+	
+        set datasetID, file(read_fastq) from pore_clean1
+	
+	output:
+	set datasetID, file("${datasetID}_minmap.bam") into minimap_bam_file
+
+	set datasetID, file("${datasetID}_minimap_sorted.bam") into minimap_bam_sort_file_initial
+	
+	set datasetID, file("${datasetID}_minimap_sorted_calmd.bam") into minimap_bam_sort_file
+
+	set datasetID, file("${datasetID}_minimap_sorted_calmd.bam.bai") into minimap_bam_index
+	
+	
+
+	"""
+	
+	minimap2 -t {params.threads} -ax map-ont -p {params.secondary_score_ratio} -N {params.maximum_secondary} ${ref_seq} ${read_fastq} > ${datasetID}_minmap.bam
+		 
+	samtools sort ${datasetID}_minmap.bam > ${datasetID}_minimap_sorted.bam
+	
+	samtools calmd -b ${datasetID}_minimap_sorted.bam ${ref} > ${datasetID}_minimap_sorted_calmd.bam
+
+	samtools index ${datasetID}_minimap_sorted_calmd.bam
 	
 	"""
 }
@@ -92,15 +146,19 @@ process alignmentMap {
 process variantCalling {
 	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
-	set datasetID, file(alignmentsorted_file) from bam_sort_file
-	set datasetID, file(alignmentsorted_file_bai) from bam_index
-
+	set datasetID, file(alignmentsorted_file_ngmlr) from ngmlr_bam_sort_file
+	set datasetID, file(alignmentsorted_file_bai_ngmlr) from ngmlr_bam_index
+	set datasetID, file(alignmentsorted_file_minimap) from minimap_bam_sort_file
+	set datasetID, file(alignmentsorted_file_bai_minimap) from minimap_bam_index
+	
 	output:
-	set datasetID, file("${datasetID}.vcf") into vcf
+	set datasetID, file("${datasetID}_ngmlr.vcf") into vcf_ngmlr
+	set datasetID, file("${datasetID}_minimap.vcf") into vcf_minimap
 	
 	"""
 		
-	sniffles -s 1 -m ${alignmentsorted_file} -v ${datasetID}.vcf --genotype
+	sniffles -s 1 -f 0.1 --skip_parameter_estimation --report_BND -m ${alignmentsorted_file_ngmlr} -v ${datasetID}_ngmlr.vcf --genotype
+	sniffles -s 1 -f 0.1 --skip_parameter_estimation --report_BND -m ${alignmentsorted_file_minimap} -v ${datasetID}_minimap.vcf --genotype
 
 	"""
 }
@@ -112,16 +170,20 @@ process variantCalling {
 process vcfAnalysis {
 	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
-	set datasetID, file(vcf_file) from vcf
-
+	set datasetID, file(vcf_file_ngmlr) from vcf_ngmlr
+	set datasetID, file(vcf_file_minimap) from vcf_minimap
 	output:
-	file '${datasetID}_breakpoint.csv' into breakpoint
-	file '${datasetID}_deletion.csv' into deletion
+	file "${datasetID}_minimap_breakpoint.csv" into vcf_break_minimap
+	file "${datasetID}_minimap_deletion.csv" into vcf_del_minimap
+	file "${datasetID}_ngmlr_breakpoint.csv" into vcf_break_ngmlr
+	file "${datasetID}_ngmlr_deletion.csv" into vcf_del_ngmlr
 	
 	
 	"""
 		
-	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file} ${datasetID}_breakpoint.csv ${datasetID}_deletion.csv
+	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file_minimap} ${datasetID}_minimap_breakpoint.csv ${datasetID}_minimap_deletion.csv
+
+	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file_ngmlr} ${datasetID}_ngmlr_breakpoint.csv ${datasetID}_ngmlr_deletion.csv
 
 	"""
 }
