@@ -1,5 +1,5 @@
 #!/usr/bin/env nextflow
-// Command line input: nextflow run ../Scripts/nano_next.nf -params-file ../Scripts/config.yaml
+// Command line input: nextflow run /home/nanopore/Saranya/Scripts/nano_next.nf -params-file /home/nanopore/Saranya/Scripts/config.yaml
 
 
 
@@ -152,14 +152,21 @@ process variantCalling {
 	set datasetID, file(alignmentsorted_file_bai_minimap) from minimap_bam_index
 	
 	output:
-	set datasetID, file("${datasetID}_ngmlr.vcf") into vcf_ngmlr
-	set datasetID, file("${datasetID}_minimap.vcf") into vcf_minimap
+	set datasetID, file("${datasetID}_ngmlr_sorted.vcf.gz") into vcf_ngmlr
+	set datasetID, file("${datasetID}_minimap_sorted.vcf.gz") into vcf_minimap
+	set datasetID, file("${datasetID}_ngmlr_sorted.vcf.gz.tbi") into vcf_ngmlr_tbi
+	set datasetID, file("${datasetID}_minimap_sorted.vcf.gz.tbi") into vcf_minimap_tbi
 	
 	"""
 		
 	sniffles -s 1 -f 0.1 --skip_parameter_estimation -m ${alignmentsorted_file_ngmlr} -v ${datasetID}_ngmlr.vcf --genotype
+	bcftools sort ${datasetID}_ngmlr.vcf > ${datasetID}_ngmlr_sorted.vcf
+	bgzip ${datasetID}_ngmlr_sorted.vcf
+	tabix -p vcf ${datasetID}_ngmlr_sorted.vcf.gz
 	sniffles -s 1 -f 0.1 --skip_parameter_estimation -m ${alignmentsorted_file_minimap} -v ${datasetID}_minimap.vcf --genotype
-
+	bcftools sort ${datasetID}_minimap.vcf > ${datasetID}_minimap_sorted.vcf
+	bgzip ${datasetID}_minimap_sorted.vcf
+	tabix -p vcf ${datasetID}_minimap_sorted.vcf.gz
 	"""
 }
 
@@ -172,6 +179,8 @@ process vcfAnalysis {
 	input:
 	set datasetID, file(vcf_file_ngmlr) from vcf_ngmlr
 	set datasetID, file(vcf_file_minimap) from vcf_minimap
+	set datasetID, file(vcf_file_ngmlr_tbi) from vcf_ngmlr_tbi
+	set datasetID, file(vcf_file_minimap_tbi) from vcf_minimap_tbi
 	output:
 	file "${datasetID}_minimap_breakpoint.csv" into vcf_break_minimap
 	file "${datasetID}_minimap_deletion.csv" into vcf_del_minimap
@@ -181,9 +190,9 @@ process vcfAnalysis {
 	
 	"""
 		
-	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file_minimap} ${datasetID}_minimap_breakpoint.csv ${datasetID}_minimap_deletion.csv
+	python Scripts/vcf_analysis.py ${vcf_file_minimap} ${datasetID}_minimap_breakpoint.csv ${datasetID}_minimap_deletion.csv ${params.region_of_interest}
 
-	python /home/nanopore/Saranya/Scripts/vcf_analysis.py ${vcf_file_ngmlr} ${datasetID}_ngmlr_breakpoint.csv ${datasetID}_ngmlr_deletion.csv
+	python Scripts/vcf_analysis.py ${vcf_file_ngmlr} ${datasetID}_ngmlr_breakpoint.csv ${datasetID}_ngmlr_deletion.csv ${params.region_of_interest}
 
 	"""
 }
