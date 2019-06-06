@@ -8,7 +8,7 @@ fastq:
 - "fastq1"
 - "fastq2"
 
-
+region_of_interest:
 
 maximum_secondary: 100
 
