@@ -74,33 +74,6 @@ process genomeindex{
 
 
 
-process alignment_ngmlr {
- 	publishDir params.outputdir, mode: 'copy', overwrite: false
-	
-	input:
-		
-        set datasetID, file(read_fastq) from pore_clean
-	
-	file ref_seq_ngmlr from genome
-	output:
-
-	set datasetID, file("${datasetID}_ngmlr.bam") into ngmlr_bam_file
-	
-	set datasetID, file("${datasetID}_ngmlr_sorted.bam") into ngmlr_bam_sort_file
-
-	set datasetID, file("${datasetID}_ngmlr_sorted.bam.bai") into ngmlr_bam_index
-
-	"""
-	
-	
-	ngmlr -t ${params.threads} -r ${ref_seq_ngmlr} -q ${read_fastq} --skip-write -o ${datasetID}_ngmlr.bam -x ont
-	 
-	samtools sort -@ ${params.threads} ${datasetID}_ngmlr.bam > ${datasetID}_ngmlr_sorted.bam
-	
-	samtools index -@ ${params.threads} ${datasetID}_ngmlr_sorted.bam
-	
-	"""
-}
 
 /*
  * Step 4. Align the fastq file using minimap2, sort and index the bam files 
@@ -146,23 +119,17 @@ process alignment_minimap {
 process variantCalling {
 	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
-	set datasetID, file(alignmentsorted_file_ngmlr) from ngmlr_bam_sort_file
-	set datasetID, file(alignmentsorted_file_bai_ngmlr) from ngmlr_bam_index
 	set datasetID, file(alignmentsorted_file_minimap) from minimap_bam_sort_file
 	set datasetID, file(alignmentsorted_file_bai_minimap) from minimap_bam_index
 	
 	output:
-	set datasetID, file("${datasetID}_ngmlr_sorted.vcf.gz") into vcf_ngmlr
+	
 	set datasetID, file("${datasetID}_minimap_sorted.vcf.gz") into vcf_minimap
-	set datasetID, file("${datasetID}_ngmlr_sorted.vcf.gz.tbi") into vcf_ngmlr_tbi
+
 	set datasetID, file("${datasetID}_minimap_sorted.vcf.gz.tbi") into vcf_minimap_tbi
 	
 	"""
 		
-	sniffles -s 1 -f 0.1 --skip_parameter_estimation -m ${alignmentsorted_file_ngmlr} -v ${datasetID}_ngmlr.vcf --genotype
-	bcftools sort ${datasetID}_ngmlr.vcf > ${datasetID}_ngmlr_sorted.vcf
-	bgzip ${datasetID}_ngmlr_sorted.vcf
-	tabix -p vcf ${datasetID}_ngmlr_sorted.vcf.gz
 	sniffles -s 1 -f 0.1 --skip_parameter_estimation -m ${alignmentsorted_file_minimap} -v ${datasetID}_minimap.vcf --genotype
 	bcftools sort ${datasetID}_minimap.vcf > ${datasetID}_minimap_sorted.vcf
 	bgzip ${datasetID}_minimap_sorted.vcf
@@ -177,24 +144,22 @@ process variantCalling {
 process vcfAnalysis {
 	publishDir params.outputdir, mode: 'copy', overwrite: false
 	input:
-	set datasetID, file(vcf_file_ngmlr) from vcf_ngmlr
+
 	set datasetID, file(vcf_file_minimap) from vcf_minimap
-	set datasetID, file(vcf_file_ngmlr_tbi) from vcf_ngmlr_tbi
+
 	set datasetID, file(vcf_file_minimap_tbi) from vcf_minimap_tbi
 	output:
 	file "${datasetID}_minimap_breakpoint.csv" into vcf_break_minimap
 	file "${datasetID}_minimap_deletion.csv" into vcf_del_minimap
-	file "${datasetID}_ngmlr_breakpoint.csv" into vcf_break_ngmlr
-	file "${datasetID}_ngmlr_deletion.csv" into vcf_del_ngmlr
+
 	
 	
 	"""
 		
 	python Scripts/vcf_analysis.py ${vcf_file_minimap} ${datasetID}_minimap_breakpoint.csv ${datasetID}_minimap_deletion.csv ${params.region_of_interest}
 
-	python Scripts/vcf_analysis.py ${vcf_file_ngmlr} ${datasetID}_ngmlr_breakpoint.csv ${datasetID}_ngmlr_deletion.csv ${params.region_of_interest}
-
 	"""
 }
+
 
 
