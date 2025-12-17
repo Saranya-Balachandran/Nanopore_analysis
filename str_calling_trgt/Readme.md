@@ -9,3 +9,8 @@ The pipeline focuses on analysing PCR amplified repeat regions <br />
 
 <br />
 Note : The bam files generated can be used to run epi2me workflow which uses straglr for calling the repeats.
+
+
+## To run the pipeline ## 
+1) Edit the config.yaml  <br />
+2) submit `sbatch run_nanopore_analysis`
