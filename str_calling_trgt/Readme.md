@@ -13,4 +13,4 @@ Note : The bam files generated can be used to run epi2me workflow which uses str
 
 ## To run the pipeline ## 
 1) Edit the config.yaml  <br />
-2) submit `sbatch run_nanopore_analysis`
+2) Submit `sbatch run_nanopore_analysis`
