@@ -17,11 +17,11 @@ tail -n +2 "$CSV_FILE" | while IFS=',' read -r COL1 COL2 COL3
 do
     # Check if a line was successfully read
     if [ -z "$COL1" ]; then
-        continue # Skip empty lines
+        continue
     fi
 
     # Trim leading/trailing whitespace and remove double quotes if necessary.
-    # We are performing a simple substitution to remove surrounding quotes.
+    
     P1=$(echo "$COL1" | sed 's/^"//;s/"$//')
     P2=$(echo "$COL2" | sed 's/^"//;s/"$//')
     P3=$(echo "$COL3" | sed 's/^"//;s/"$//;s/\r$//')
