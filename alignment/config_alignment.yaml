@@ -1,0 +1,34 @@
+#Command line input: nextflow run nano_next.nf -params-file config.yaml
+
+genomeref: "/data/humangen_external/Nanopore/reference/hg38.fa"
+
+
+fastq:
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode01/barcode01.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode03/barcode03.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode04/barcode04.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode05/barcode05.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode06/barcode06.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode07/barcode07.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode08/barcode08.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode09/barcode09.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode10/barcode10.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode11/barcode11.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode12/barcode12.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode13/barcode13.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode14/barcode14.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode15/barcode15.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode16/barcode16.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode17/barcode17.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode18/barcode18.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode19/barcode19.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode20/barcode20.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode21/barcode21.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode22/barcode22.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode23/barcode23.fastq.gz"
+- "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/251203-SCA8/20251203_1234_MD-101961_FBA61288_2fcd684f/fastq_pass/barcode24/barcode24.fastq.gz"
+
+
+threads: 50
+
+outfolder: "/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/test"

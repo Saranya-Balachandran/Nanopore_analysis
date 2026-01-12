@@ -1,0 +1,10 @@
+bam_file,sample_name,out_dir
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode06.fastq_minimap_sorted_calmd.bam,barcode06,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode06
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode13.fastq_minimap_sorted_calmd.bam,barcode13,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode13
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode17.fastq_minimap_sorted_calmd.bam,barcode17,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode17
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode19.fastq_minimap_sorted_calmd.bam,barcode19,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode19
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode21.fastq_minimap_sorted_calmd.bam,barcode21,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode21
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode22.fastq_minimap_sorted_calmd.bam,barcode22,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode22
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode23.fastq_minimap_sorted_calmd.bam,barcode23,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode23
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode24.fastq_minimap_sorted_calmd.bam,barcode24,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode24
+/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode01.fastq_minimap_sorted_calmd.bam,barcode01,/data/humangen_external/Saranya/Andreas/251203-Lukas-SCA8/Analysis/barcode01
