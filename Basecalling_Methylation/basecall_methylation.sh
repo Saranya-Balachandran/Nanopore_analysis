@@ -10,7 +10,7 @@
 ## https://nanoporetech.github.io/modkit/intro_pileup.html #description-of-bedmethyl-output
 module load singularity
 module load nextflow
-module load nvidia-cuda/12.8
+module load nvidia-cuda
 export NXF_SINGULARITY_HOME_MOUNT=true
 export SINGULARITY_CACHEDIR="$WORK/singularity"
 
