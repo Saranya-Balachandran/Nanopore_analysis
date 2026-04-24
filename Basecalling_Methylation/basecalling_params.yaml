@@ -1,0 +1,15 @@
+# Samples to be processed.
+# Provide the details in a csv samplesheet file.
+samplesheet: "/data/humangen_external/Saranya/Nanopore/Basecalling_Methylation/samplesheet.csv"
+# Choose whether or not to perform velocyto to get spliced/unspliced count matrices.
+dorodo_model: "/dorado_models/dna_r10.4.1_e8.2_400bps_hac@v5.2.0" # dont change the initial path /dorodo_models. Model names are available in https://software-docs.nanoporetech.com/dorado/latest/models/list/ # to add basemodification extend this with a comma ex: /dorado_models/dna_r10.4.1_e8.2_400bps_hac@v5.2.0,5mCG_5hmCG,6mA.
+# Choose whether or not to perform cellbender
+reference: "/data/humangen_external/Daniela/Analysis/reference/hg38_ebv.fa"
+
+max_reads: 100000000
+
+kit_name: "SQK-NBD114-24"
+
+
+# Version info
+version: "2026.04.14"
